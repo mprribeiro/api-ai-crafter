@@ -6,12 +6,10 @@ import com.mprribeiro.app_ai_crafter.dto.auth.SignupRequest;
 import com.mprribeiro.app_ai_crafter.dto.auth.UserProfileResponse;
 import com.mprribeiro.app_ai_crafter.service.AuthService;
 import com.mprribeiro.app_ai_crafter.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,12 +20,12 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> signup(final SignupRequest request) {
+    public ResponseEntity<AuthResponse> signup(@RequestBody @Valid final SignupRequest request) {
         return ResponseEntity.ok(authService.signup(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login (final LoginRequest request) {
+    public ResponseEntity<AuthResponse> login (@RequestBody @Valid final LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 

@@ -1,5 +1,7 @@
 package com.mprribeiro.app_ai_crafter.entity;
 
+import com.mprribeiro.app_ai_crafter.enums.ChatEventStatus;
+import com.mprribeiro.app_ai_crafter.enums.ChatEventType;
 import com.mprribeiro.app_ai_crafter.enums.MessageRole;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

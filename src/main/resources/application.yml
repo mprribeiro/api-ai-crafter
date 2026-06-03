@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: app-ai-crafter
+  security:
+    user:
+      name: user
+      password: "a15f286e-710c-45ce-8da4-818bed1578b2"
+  datasource:
+    url: jdbc:postgresql://localhost:5432/crafter-db
+    username: admin
+    password: "admin123"
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect

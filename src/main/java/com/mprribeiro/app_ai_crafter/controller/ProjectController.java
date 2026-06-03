@@ -4,6 +4,7 @@ import com.mprribeiro.app_ai_crafter.dto.project.ProjectRequest;
 import com.mprribeiro.app_ai_crafter.dto.project.ProjectResponse;
 import com.mprribeiro.app_ai_crafter.dto.project.ProjectSummaryResponse;
 import com.mprribeiro.app_ai_crafter.service.ProjectService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/projects")
 public class ProjectController {
 
-    final ProjectService projectService;
+    private final ProjectService projectService;
 
     @GetMapping
     public ResponseEntity<List<ProjectSummaryResponse>> getUserProjects() {
@@ -39,13 +40,13 @@ public class ProjectController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<ProjectResponse> updateProject(@PathVariable(name = "id") final Long id,
-                                                         @RequestBody final ProjectRequest request) {
+                                                         @RequestBody @Valid final ProjectRequest request) {
         final var userId = 1L;
-        return ResponseEntity.ok(projectService.updateProject(request, userId));
+        return ResponseEntity.ok(projectService.updateProject(id, request, userId));
     }
 
     @PostMapping
-    public ResponseEntity<ProjectResponse> createProject(@RequestBody final ProjectRequest request) {
+    public ResponseEntity<ProjectResponse> createProject(@RequestBody @Valid final ProjectRequest request) {
         final var userId = 1L;
         return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createProject(request, userId));
     }

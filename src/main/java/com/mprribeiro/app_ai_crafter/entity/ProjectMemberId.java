@@ -1,14 +1,17 @@
 package com.mprribeiro.app_ai_crafter.entity;
 
-import lombok.*;
+import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Embeddable
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProjectMemberId {
-
     Long projectId;
     Long userId;
-
 }

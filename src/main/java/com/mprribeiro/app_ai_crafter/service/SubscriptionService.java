@@ -4,9 +4,7 @@ import com.mprribeiro.app_ai_crafter.dto.subscription.CheckoutRequest;
 import com.mprribeiro.app_ai_crafter.dto.subscription.CheckoutResponse;
 import com.mprribeiro.app_ai_crafter.dto.subscription.PortalResponse;
 import com.mprribeiro.app_ai_crafter.dto.subscription.SubscriptionResponse;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface SubscriptionService {
 
     SubscriptionResponse getCurrentSubscription(final Long userId);
