@@ -3,6 +3,7 @@ package com.mprribeiro.app_ai_crafter.controller;
 import com.mprribeiro.app_ai_crafter.dto.project.ProjectRequest;
 import com.mprribeiro.app_ai_crafter.dto.project.ProjectResponse;
 import com.mprribeiro.app_ai_crafter.dto.project.ProjectSummaryResponse;
+import com.mprribeiro.app_ai_crafter.security.AuthUtil;
 import com.mprribeiro.app_ai_crafter.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,37 +19,37 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final AuthUtil authUtil;
 
     @GetMapping
     public ResponseEntity<List<ProjectSummaryResponse>> getUserProjects() {
-        final var userId = 1L;
-        return ResponseEntity.ok(projectService.getUserProjects(userId));
+        return ResponseEntity.ok(projectService.getUserProjects(getCurrentUserId()));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponse> getProjectById(@PathVariable(name = "id") final Long id) {
-        final var userId = 1L;
-        return ResponseEntity.ok(projectService.getUserProjectById(id, userId));
+        return ResponseEntity.ok(projectService.getUserProjectById(id, getCurrentUserId()));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable(name = "id") final Long id) {
-        final var userId = 1L;
-        projectService.deleteUserProjectById(id, userId);
+        projectService.deleteUserProjectById(id, getCurrentUserId());
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ProjectResponse> updateProject(@PathVariable(name = "id") final Long id,
                                                          @RequestBody @Valid final ProjectRequest request) {
-        final var userId = 1L;
-        return ResponseEntity.ok(projectService.updateProject(id, request, userId));
+        return ResponseEntity.ok(projectService.updateProject(id, request, getCurrentUserId()));
     }
 
     @PostMapping
     public ResponseEntity<ProjectResponse> createProject(@RequestBody @Valid final ProjectRequest request) {
-        final var userId = 1L;
-        return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createProject(request, userId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createProject(request, getCurrentUserId()));
+    }
+
+    private Long getCurrentUserId() {
+        return authUtil.getCurrentUserId();
     }
 
 }

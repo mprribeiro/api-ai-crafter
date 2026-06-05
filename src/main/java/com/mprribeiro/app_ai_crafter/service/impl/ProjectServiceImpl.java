@@ -8,7 +8,6 @@ import com.mprribeiro.app_ai_crafter.entity.ProjectMember;
 import com.mprribeiro.app_ai_crafter.entity.ProjectMemberId;
 import com.mprribeiro.app_ai_crafter.enums.ProjectRole;
 import com.mprribeiro.app_ai_crafter.exception.ProjectNotFoundException;
-import com.mprribeiro.app_ai_crafter.exception.UserNotFoundException;
 import com.mprribeiro.app_ai_crafter.mapper.ProjectMapper;
 import com.mprribeiro.app_ai_crafter.repository.ProjectMemberRepository;
 import com.mprribeiro.app_ai_crafter.repository.ProjectRepository;
@@ -55,8 +54,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponse createProject(final ProjectRequest request, final Long userId) {
-        final var owner = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found for id: " + userId));
+        final var owner = userRepository.getReferenceById(userId);
 
         Project project = Project.builder()
                 .name(request.name())
@@ -89,7 +87,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     private Project getAcessibleProject(final Long id, final Long userId) {
-        return projectRepository.findAcessibleById(id)
+        return projectRepository.findAcessibleByIdAndUserId(id, userId)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found for id: " + id));
     }
 }

@@ -7,8 +7,12 @@ import com.mprribeiro.app_ai_crafter.entity.User;
 import com.mprribeiro.app_ai_crafter.exception.BadRequestException;
 import com.mprribeiro.app_ai_crafter.mapper.UserMapper;
 import com.mprribeiro.app_ai_crafter.repository.UserRepository;
+import com.mprribeiro.app_ai_crafter.security.AuthUtil;
 import com.mprribeiro.app_ai_crafter.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +23,8 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final AuthUtil authUtil;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     public AuthResponse signup(final SignupRequest request) {
@@ -30,11 +36,21 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(request.password()));
         user = userRepository.save(user);
 
-        return new AuthResponse("dummy", userMapper.toUserProfileResponseFromUser(user));
+        String token = authUtil.generateToken(user);
+
+        return new AuthResponse(token, userMapper.toUserProfileResponseFromUser(user));
     }
 
     @Override
     public AuthResponse login(final LoginRequest request) {
-        return null;
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(
+                        request.username(),
+                        request.password()
+                ));
+
+        User user = (User) authentication.getPrincipal();
+        String token = authUtil.generateToken(user);
+        return new AuthResponse(token, userMapper.toUserProfileResponseFromUser(user));
     }
 }
