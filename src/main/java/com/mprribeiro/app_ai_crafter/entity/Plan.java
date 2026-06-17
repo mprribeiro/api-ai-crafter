@@ -1,5 +1,6 @@
 package com.mprribeiro.app_ai_crafter.entity;
 
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,12 +9,16 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity(name = "plans")
 public class Plan {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     String name;
 
+    @Column(unique = true)
     String stripePriceId;
 
     Integer maxProjects;

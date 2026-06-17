@@ -4,11 +4,11 @@ spring:
   security:
     user:
       name: user
-      password: "a15f286e-710c-45ce-8da4-818bed1578b2"
+      password: ${SPRING_SECURITY_PASSWORD}
   datasource:
     url: jdbc:postgresql://localhost:5432/crafter-db
     username: admin
-    password: "admin123"
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -18,6 +18,23 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  ai:
+    openai:
+      api-key: https://openrouter.ai/api
+      chat:
+        options:
+          model: openai/gpt-5.2-codex
+          temperature: 0.0
 
 jwt:
-  secret-key: PGnVeMcrZZnK4m3aPZZdwX0kGdOPXQgpaqvHy4Fwjc5
+  secret: ${JWT_SECRET}
+
+stripe:
+  api:
+    secret: ${STRIPE_API_SECRET}
+  webhook:
+    secret: ${STRIPE_WEBHOOK_SECRET}
+
+client:
+  url: http://localhost:8080
+

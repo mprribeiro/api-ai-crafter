@@ -7,14 +7,14 @@ import com.mprribeiro.app_ai_crafter.entity.Project;
 import com.mprribeiro.app_ai_crafter.entity.ProjectMember;
 import com.mprribeiro.app_ai_crafter.entity.ProjectMemberId;
 import com.mprribeiro.app_ai_crafter.exception.ActionNotAllowedException;
-import com.mprribeiro.app_ai_crafter.exception.ProjectNotFoundException;
-import com.mprribeiro.app_ai_crafter.exception.UserNotFoundException;
+import com.mprribeiro.app_ai_crafter.exception.ResourceNotFoundException;
 import com.mprribeiro.app_ai_crafter.mapper.ProjectMemberMapper;
 import com.mprribeiro.app_ai_crafter.repository.ProjectMemberRepository;
 import com.mprribeiro.app_ai_crafter.repository.ProjectRepository;
 import com.mprribeiro.app_ai_crafter.repository.UserRepository;
 import com.mprribeiro.app_ai_crafter.service.ProjectMemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -30,19 +30,21 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     private final UserRepository userRepository;
 
     @Override
+    @PreAuthorize("@security.canViewMembers(#projectId)")
     public List<MemberResponse> getProjectMembers(Long projectId, Long userId) {
         return projectMemberRepository.findByIdProjectId(projectId)
                 .stream().map(projectMemberMapper::toMemberResponseFromProjectMember).toList();
     }
 
     @Override
+    @PreAuthorize("@security.canManageMembers(#projectId)")
     public MemberResponse inviteMember(final Long projectId,
                                        final Long userId,
                                        final InviteMemberRequest request) {
         final var project = getAcessibleProject(projectId, userId);
 
         final var user = userRepository.findByUsername(request.username())
-                .orElseThrow(() -> new UserNotFoundException("User not found for username: " + request.username()));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found for username: " + request.username()));
 
         if (user.getId().equals(userId)) {
             throw new ActionNotAllowedException("User cannot invite themselves to the project");
@@ -66,6 +68,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     }
 
     @Override
+    @PreAuthorize("@security.canManageMembers(#projectId)")
     public MemberResponse updateMemberRole(final Long projectId,
                                            final Long userId,
                                            final Long memberId,
@@ -73,7 +76,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
         final var project = getAcessibleProject(projectId, userId);
 
         ProjectMember member = projectMemberRepository.findById(new ProjectMemberId(projectId, memberId))
-                .orElseThrow(() -> new UserNotFoundException("Member with id: " + memberId + " is not a member of the project with id: " + projectId));
+                .orElseThrow(() -> new ResourceNotFoundException("Member with id: " + memberId + " is not a member of the project with id: " + projectId));
 
         member.setProjectRole(request.role());
         member = projectMemberRepository.save(member);
@@ -81,6 +84,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     }
 
     @Override
+    @PreAuthorize("@security.canManageMembers(#projectId)")
     public void removeMember(final Long projectId, final Long userId, final Long memberId) {
         final var project = getAcessibleProject(projectId, userId);
 
@@ -90,6 +94,6 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 
     private Project getAcessibleProject(final Long projectId, final Long userId) {
         return projectRepository.findAcessibleByIdAndUserId(projectId, userId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project not found for id: " + projectId + " and userId: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found for id: " + projectId + " and userId: " + userId));
     }
 }

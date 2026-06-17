@@ -1,7 +1,7 @@
 package com.mprribeiro.app_ai_crafter.service.impl;
 
 import com.mprribeiro.app_ai_crafter.dto.auth.UserProfileResponse;
-import com.mprribeiro.app_ai_crafter.exception.UserNotFoundException;
+import com.mprribeiro.app_ai_crafter.exception.ResourceNotFoundException;
 import com.mprribeiro.app_ai_crafter.mapper.UserMapper;
 import com.mprribeiro.app_ai_crafter.repository.UserRepository;
 import com.mprribeiro.app_ai_crafter.service.UserService;
@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserProfileResponse getProfile(Long userId) {
         final var user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
         return userMapper.toUserProfileResponseFromUser(user);
     }

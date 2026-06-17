@@ -18,7 +18,7 @@ import java.util.Objects;
 @Component
 public class AuthUtil {
 
-    @Value("${jwt.secret-key}")
+    @Value("${jwt.secret}")
     private String jwtSecret;
 
     private SecretKey getSecretKey() {

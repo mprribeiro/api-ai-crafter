@@ -4,6 +4,6 @@ public record PlanResponse(Long id,
                            String name,
                            Integer maxProjects,
                            Integer maxTokensPerDay,
-                           Boolean unlimetedAi,
+                           Boolean unlimitedAi,
                            String price) {
 }

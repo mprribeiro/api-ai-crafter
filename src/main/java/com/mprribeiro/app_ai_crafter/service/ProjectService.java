@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface ProjectService {
 
-    ProjectResponse getUserProjectById(final Long id, final Long userId);
+    ProjectResponse getUserProjectById(final Long id);
 
-    List<ProjectSummaryResponse> getUserProjects(final Long userId);
+    List<ProjectSummaryResponse> getUserProjects();
 
-    void deleteUserProjectById(final Long id, final Long userId);
+    void deleteProjectById(final Long id);
 
-    ProjectResponse createProject(final ProjectRequest request, final Long userId);
+    ProjectResponse createProject(final ProjectRequest request);
 
-    ProjectResponse updateProject(final Long id, final ProjectRequest request, final Long userId);
+    ProjectResponse updateProject(final Long id, final ProjectRequest request);
 }
