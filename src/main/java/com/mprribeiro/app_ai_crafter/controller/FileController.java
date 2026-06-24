@@ -2,7 +2,7 @@ package com.mprribeiro.app_ai_crafter.controller;
 
 import com.mprribeiro.app_ai_crafter.dto.project.FileContentResponse;
 import com.mprribeiro.app_ai_crafter.dto.project.FileNode;
-import com.mprribeiro.app_ai_crafter.service.FileService;
+import com.mprribeiro.app_ai_crafter.service.ProjectFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/projects/{projectId}/files")
 public class FileController {
 
-    private final FileService fileService;
+    private final ProjectFileService fileService;
 
     @GetMapping
     public ResponseEntity<List<FileNode>> getFileTree(@PathVariable Long projectId) {
