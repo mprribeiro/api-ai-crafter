@@ -6,8 +6,8 @@ spring:
       name: user
       password: ${SPRING_SECURITY_PASSWORD}
   datasource:
-    url: jdbc:postgresql://localhost:5432/crafter-db
-    username: admin
+    url: jdbc:postgresql://localhost:9010/crafter-pgvector-db
+    username: user
     password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
@@ -40,6 +40,11 @@ stripe:
 client:
   url: http://localhost:8080
 
+logging:
+  level:
+    org.springframework.ai:
+      chat.client: DEBUG
+
 management:
   endpoints:
     web.exposure.include: health,info,metrics,prometheus
@@ -59,3 +64,9 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+minio:
+  url: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin123
+  bucket: projects
